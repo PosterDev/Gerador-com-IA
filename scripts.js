@@ -1,5 +1,5 @@
 let botao = document.querySelector(".botao-gerar");
-let chave = "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";
+let chave = "SUA_CHAVE_GROQ_AQUI"; // Adicione sua chave de API Groq aqui
 let endereco = "https://api.groq.com/openai/v1/chat/completions";
 
 
@@ -18,7 +18,7 @@ async function gerarCodigo() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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 "
+            "Authorization": "Bearer " + chave
         },
         body: JSON.stringify({
             model: "llama-3.3-70b-versatile",
