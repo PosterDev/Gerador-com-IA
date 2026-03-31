@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <title>DevClub - Gerador de IA/Poster Dev</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background-color: #09090b;
+            color: #e4e4e7;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #fafafa;
+            font-weight: bold;
+
+        }
+
+        span {
+            color: #22c55e;
+        }
+
+        p {
+
+            color: #71717a;
+            margin: 10px;
+        }
+
+        textarea {
+            resize: none;
+            width: 100%;
+            max-width: 640px;
+            padding: 16px;
+            border: 1px solid #27272a;
+            border-radius: 10px;
+            background: #27272a;
+            color: #fafafa;
+            outline: none;
+            margin-top: 20px;
+        }
+
+        button {
+            width: 100%;
+            max-width: 640px;
+            background: #22c55e;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            border: none;
+            padding: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .bloco-codigo {
+            background: #141419;
+            border: 1px solid #27272a;
+            padding: 16px;
+            font-size: 14px;
+            border-radius: 12px;
+            color: #34d399;
+            line-height: 2;
+            overflow: auto;
+            width: 100%;
+            max-width: 450px;
+            max-height: 450px;
+            white-space: pre-wrap;
+            margin: 10px;
+        }
+
+        .resultado-codigo {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            min-height: 350px;
+            background: #141419;
+            margin: 10px;
+            max-width: 450px;
+            max-height: 450px;
+
+        }
+
+        .resultado {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        CSS Gerador <span>com IA </span>⚡️
+    </h1>
+
+    <p>
+        Descreva o que você imagina e veja a mágica acontecer
+    </p>
+
+
+    <textarea rows="3" class="caixa-texto" placeholder="Ex: Bola azul pingando"></textarea>
+
+    <button class="botao-gerar">Gerar Código ⚡️</button>
+
+    <div class="resultado">
+
+        <div>
+            <h2>Código</h2>
+            <p class="bloco-codigo"></p>
+        </div>
+
+        <div>
+            <h2>Preview</h2>
+            <iframe class="resultado-codigo"></iframe>
+
+        </div>
+
+    </div>
+
+    <script>
+        let botao = document.querySelector(".botao-gerar");
+        let chave = "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";
+        let endereco = "https://api.groq.com/openai/v1/chat/completions";
+
+        async function gerarCodigo() {
+            let textoUsuario = document.querySelector(".caixa-texto").value
+
+            let blocoCodigo = document.querySelector(".bloco-codigo");
+
+            let resultadoCodigo = document.querySelector(".resultado-codigo");
+
+            let resposta = await fetch(endereco, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + chave
+                },
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [
+                        {
+                            role: "system",
+                            content: "Você é um gerador de código HTML e CSS. Responda SOMENTE com código puro. NUNCA use crases, markdown ou explicações. Formato: primeiro <style> com o CSS, depois o HTML. Siga EXATAMENTE o que o usuário pedir. Se pedir algo quicando, use translateY no @keyframes. Se pedir algo girando, use rotate."
+                        },
+                        {
+                            role: "user",
+                            content: textoUsuario
+                        }
+                    ],
+
+                })
+            });
+
+            let dados = await resposta.json();
+            let resultado = dados.choices[0].message.content;
+
+
+            blocoCodigo.textContent = resultado
+            resultadoCodigo.srcdoc = resultado
+
+            console.log(dados);
+
+        }
+
+        botao.addEventListener("click", gerarCodigo);
+    </script>
+
+</body>
+
+</html>
