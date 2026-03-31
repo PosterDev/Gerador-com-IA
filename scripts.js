@@ -1,5 +1,5 @@
 let botao = document.querySelector(".botao-gerar");
-let chave = "SUA_CHAVE_GROQ_AQUI"; // Adicione sua chave de API Groq aqui
+let chave = "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";
 let endereco = "https://api.groq.com/openai/v1/chat/completions";
 
 
