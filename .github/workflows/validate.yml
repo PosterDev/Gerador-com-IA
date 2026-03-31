@@ -1,0 +1,54 @@
+name: Validação de Código
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Verificar arquivos HTML
+      run: |
+        if [ -f index.html ]; then
+          echo "✅ Arquivo HTML encontrado"
+          grep -q "<html" index.html && echo "✅ Tag HTML presente" || echo "❌ Tag HTML não encontrada"
+        fi
+
+    - name: Verificar arquivos CSS
+      run: |
+        if [ -f styles.css ]; then
+          echo "✅ Arquivo CSS encontrado"
+          wc -l styles.css
+        fi
+
+    - name: Verificar arquivos JavaScript
+      run: |
+        if [ -f scripts.js ]; then
+          echo "✅ Arquivo JavaScript encontrado"
+          wc -l scripts.js
+        fi
+
+    - name: Listar arquivos do projeto
+      run: |
+        echo "📁 Estrutura do projeto:"
+        ls -la
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Verificar secrets no código
+      run: |
+        echo "🔍 Verificando possíveis secrets..."
+        if grep -r "gsk_" . --include="*.js" --include="*.html" 2>/dev/null; then
+          echo "⚠️ Aviso: Possível API key detectada no código"
+        else
+          echo "✅ Nenhuma API key detectada"
+        fi
