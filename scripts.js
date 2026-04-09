@@ -1,5 +1,5 @@
 let botao = document.querySelector(".botao-gerar");
-let chave = "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";
+let chave = "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";
 let endereco = "https://api.groq.com/openai/v1/chat/completions";
 
 
